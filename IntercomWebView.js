@@ -22,7 +22,6 @@ export default class IntercomWebView extends Component{
         return(
 
             <View style={[style.containerStyle, {height: defaultHeight}, this.props.style]}>
-            <Text>Goodbye</Text>
                 <WebView source={require('./IntercomWebView.html')}
                          injectedJavaScript={this.injectedJS( appId, name, email, hideLauncher )}
                          javaScriptEnabled={true}
@@ -35,7 +34,7 @@ export default class IntercomWebView extends Component{
 const style = {
     containerStyle: {
         height: 500,
-        marginTop: 10
+        flex: 1
     }    
 }    
 
