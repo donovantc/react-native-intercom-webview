@@ -4,7 +4,7 @@ A React Native Component that renders Intercom (https://www.intercom.com/) in a 
 
 # Usage
 
-Inside your project directory, install the npm module:
+Inside your project directory, install the package:
 
 `npm i react-native-intercom-webview`
 
