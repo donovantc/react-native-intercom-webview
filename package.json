@@ -2,7 +2,7 @@
   "name": "react-native-intercom-webview",
   "version": "1.0.0",
   "description": "React Native WebView containing Intercom",
-  "main": "IntercomWeb.js",
+  "main": "IntercomWebView.js",
   "scripts": {
     "lint": "eslint IntercomWeb.js"
   },
