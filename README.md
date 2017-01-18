@@ -12,17 +12,21 @@ You can use the component in your React Native component as follows:
 
 1. Import the IntercomWebView component:
 
-`import IntercomWebView from 'react-native-intercom-webview';`
+```javascript
+import IntercomWebView from 'react-native-intercom-webview';
+```
 
 2. Render the IntercomWebView component:
 
-`<IntercomWebView
-             appId="intercomappId"
-             name="intercom name"
-             email="intercom email"
-             defaultHeight={500}
-             hideLauncher={false}
-             showLoadingOverlay={true}/>`
+```javascript
+<IntercomWebView
+      appId="intercomappId"
+      name="intercom name"
+      email="intercom email"
+      defaultHeight={500}
+      hideLauncher={false}
+      showLoadingOverlay={true} />
+```
              
 Change the intercom details (appId, name, email) to your own.
              
