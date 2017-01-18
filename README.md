@@ -17,12 +17,14 @@ You can use the component in your React Native component as follows:
 2. Render the IntercomWebView component:
 
 `<IntercomWebView
-             appId="wqi8u4c9"
+             appId="intercomappId"
              name="intercom name"
              email="intercom email"
              defaultHeight={500}
              hideLauncher={false}
              showLoadingOverlay={true}/>`
+             
+Change the intercom details (appId, name, email) to your own.
              
 # Contribute
 This component is still in its infancy.
