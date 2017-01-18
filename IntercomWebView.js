@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { View, WebView } from 'react-native';
+import { View, WebView, Text } from 'react-native';
 
 
-class IntercomWebView extends Component{
+export default class IntercomWebView extends Component{
     injectedJS = (appId, name, email, hideLauncher) => {
         return `
             window.Intercom('boot', {
@@ -11,8 +11,8 @@ class IntercomWebView extends Component{
                 email: '${email}',
                 hide_default_launcher: ${hideLauncher}
             });
-
-            if (hideLauncher)
+            
+            if (${hideLauncher})
                 window.Intercom('showMessages');`;
     }
 
@@ -20,9 +20,11 @@ class IntercomWebView extends Component{
         const { appId, name, email, hideLauncher, defaultHeight } = this.props;
         
         return(
-            <View style={[style.containerStyle], this.props.style}>
+
+            <View style={[style.containerStyle, {height: defaultHeight}, this.props.style]}>
+            <Text>Goodbye</Text>
                 <WebView source={require('./IntercomWebView.html')}
-                         injectedJavaScript={this.injectedJS( appID, name, email, hideLauncher, defaultHeight )}
+                         injectedJavaScript={this.injectedJS( appId, name, email, hideLauncher )}
                          javaScriptEnabled={true}
                          domStorageEnabled={true}/>
             </View>
@@ -32,8 +34,9 @@ class IntercomWebView extends Component{
     
 const style = {
     containerStyle: {
-        height: 500
+        height: 500,
+        marginTop: 10
     }    
 }    
 
-export {IntercomWebView};
+
