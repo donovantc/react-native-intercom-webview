@@ -1,6 +1,6 @@
 # react-native-intercom-webview
 
-A React Native Component that renders Intercom (https://www.intercom.com/) in a React Native WebView.
+A React Native Component that renders [Intercom](https://www.intercom.com) in a React Native WebView.
 
 # Usage
 
