@@ -32,10 +32,8 @@ class IntercomWebView extends Component{
     }
 
     render(){
-        const { appId, name, email, hideLauncher, defaultHeight, showLoadingOverlay, loaderColor, ...remainingProps } = this.props;
-        const { isLoading } = this.state;
-
-        console.log(isLoading);
+        const { appId, name, email, hideLauncher, defaultHeight, showLoadingOverlay, ...remainingProps } = this.props;
+        const { isLoading} = this.state;
 
         return(
 
