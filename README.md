@@ -29,10 +29,15 @@ import IntercomWebView from 'react-native-intercom-webview';
 ```
              
 Change the intercom details (appId, name, email) to your own.
+
+The _hideLauncher_ prop hides the Intercom launcher icon and automatically shows the Intercom messages. This is useful for rendering the Intercom messages when a user clicks on your own custom launcher (e.g. a button).
+
+If _defaultHeight_ is not provided, the IntercomWebView will attempt to fill the height of the window using the [Dimension](https://facebook.github.io/react-native/docs/dimensions.html#get) module.
+
+Any other WebView props (exluding: _source, injectedJavaScript, javaScriptEnabled_) can be passed to the IntercomWebView component as props and they will be passed onto the underlying WebView component.
+
              
 # Contribute
-This component is still in its infancy.
-
 To contribute, create a Pull Request:
 
 https://github.com/donovantc/react-native-intercom-webview

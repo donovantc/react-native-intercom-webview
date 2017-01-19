@@ -1,6 +1,7 @@
 import React, {Component } from 'react';
 import { View, WebView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Dimensions from 'Dimensions';
 
 
 class IntercomWebView extends Component{
@@ -9,6 +10,12 @@ class IntercomWebView extends Component{
         this.state = {
             isLoading: true
         };
+    }
+
+    componentDidMount = () => {
+        this.setState({
+            windowHeight: Dimensions.get('window').height
+        });
     }
 
     injectedJS = (appId, name, email, hideLauncher) => {
@@ -33,27 +40,22 @@ class IntercomWebView extends Component{
 
     render(){
         const { appId, name, email, hideLauncher, defaultHeight, showLoadingOverlay, ...remainingProps } = this.props;
-        const { isLoading} = this.state;
+        const { isLoading, windowHeight } = this.state;
+
+        let height = defaultHeight || windowHeight;
 
         return(
 
-            <View style={[style.containerStyle, {height: defaultHeight}, this.props.style]}>
+            <View style={[{height: height}, this.props.style]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
                          injectedJavaScript={this.injectedJS( appId, name, email, hideLauncher )}
                          javaScriptEnabled={true}
-                         domStorageEnabled={true}
                          onLoadEnd={this.onLoadEnd}
                         {...remainingProps}
                 />
             </View>
         )
-    }
-}
-
-const style = {
-    containerStyle: {
-        height: 500
     }
 }
 
@@ -63,8 +65,7 @@ IntercomWebView.PropTypes = {
     email: React.PropTypes.string,
     hideLauncher: React.PropTypes.bool,
     showLoadingOverlay: React.PropTypes.bool,
-    defaultHeight: React.PropTypes.number,
-    loaderColor: React.PropTypes.string
+    defaultHeight: React.PropTypes.number
 };
 
 IntercomWebView.defaultProps = {
