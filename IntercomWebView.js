@@ -1,8 +1,6 @@
 import React, {Component } from 'react';
-import { View, WebView } from 'react-native';
+import { View, WebView, Dimensions } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Dimensions from 'Dimensions';
-
 
 class IntercomWebView extends Component{
     constructor(props){
