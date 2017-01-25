@@ -1,6 +1,7 @@
 # react-native-intercom-webview
 
 A React Native Component that renders [Intercom](https://www.intercom.com) in a React Native WebView.
+This plugin supports React Native version 0.40.
 
 # Usage
 
