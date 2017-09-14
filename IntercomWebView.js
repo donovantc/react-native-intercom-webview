@@ -8,6 +8,7 @@ class IntercomWebView extends Component{
         this.state = {
             isLoading: true
         };
+        this.onLoadEnd = this.onLoadEnd.bind(this);
     }
 
     componentDidMount = () => {
@@ -16,17 +17,21 @@ class IntercomWebView extends Component{
         });
     }
 
-    injectedJS = (appId, name, email, hideLauncher) => {
+    injectedJS = (appId, name, email, id, hideLauncher) => {
         return `
             window.Intercom('boot', {
                 app_id: '${appId}',
                 name: '${name}',
                 email: '${email}',
+                user_id: '${id}',
                 hide_default_launcher: ${hideLauncher}
             });
-            
+
             if (${hideLauncher})
-                window.Intercom('showMessages');`;
+                window.Intercom('showMessages');
+
+            window.Intercom('onHide', function () { window.postMessage && window.postMessage('onHide') })
+                `;
     }
 
     onLoadEnd = () => {
@@ -36,8 +41,14 @@ class IntercomWebView extends Component{
             this.props.onLoadEnd();
     }
 
+    dispatch = (message) => {
+      if (message === 'onHide') {
+        this.props.onHide && this.props.onHide();
+      }
+    }
+
     render(){
-        const { appId, name, email, hideLauncher, defaultHeight, showLoadingOverlay, ...remainingProps } = this.props;
+        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, ...remainingProps } = this.props;
         const { isLoading, windowHeight } = this.state;
 
         let height = defaultHeight || windowHeight;
@@ -47,9 +58,10 @@ class IntercomWebView extends Component{
             <View style={[{height: height}, this.props.style]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
-                         injectedJavaScript={this.injectedJS( appId, name, email, hideLauncher )}
+                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher )}
                          javaScriptEnabled={true}
                          onLoadEnd={this.onLoadEnd}
+                         onMessage={e => this.dispatch(e.nativeEvent.data)}
                         {...remainingProps}
                 />
             </View>
