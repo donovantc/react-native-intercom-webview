@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/APSL/react-native-intercom-webview#readme",
   "dependencies": {
-    "react-native-loading-spinner-overlay": "^0.4.1"
+    "react-native-loading-spinner-overlay": "^0.5.2"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.5",
