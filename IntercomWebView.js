@@ -1,4 +1,5 @@
-import React, {Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, WebView, Dimensions } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -57,13 +58,13 @@ class IntercomWebView extends Component{
     }
 }
 
-IntercomWebView.PropTypes = {
-    appId: React.PropTypes.string,
-    name: React.PropTypes.string,
-    email: React.PropTypes.string,
-    hideLauncher: React.PropTypes.bool,
-    showLoadingOverlay: React.PropTypes.bool,
-    defaultHeight: React.PropTypes.number
+IntercomWebView.propTypes = {
+    appId: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    hideLauncher: PropTypes.bool,
+    showLoadingOverlay: PropTypes.bool,
+    defaultHeight: PropTypes.number
 };
 
 IntercomWebView.defaultProps = {
