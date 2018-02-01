@@ -18,14 +18,16 @@ class IntercomWebView extends Component{
         });
     }
 
-    injectedJS = (appId, name, email, id, hideLauncher) => {
+
+    injectedJS = (appId, name, email, id, hideLauncher, userHash) => {
         return `
             window.Intercom('boot', {
                 app_id: '${appId}',
                 name: '${name}',
                 email: '${email}',
                 user_id: '${id}',
-                hide_default_launcher: ${hideLauncher}
+                hide_default_launcher: ${hideLauncher},
+                user_hash: '${userHash}'
             });
 
             if (${hideLauncher})
@@ -49,7 +51,7 @@ class IntercomWebView extends Component{
     }
 
     render(){
-        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, ...remainingProps } = this.props;
+        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, userHash, ...remainingProps } = this.props;
         const { isLoading, windowHeight } = this.state;
 
         let height = defaultHeight || windowHeight;
@@ -59,7 +61,7 @@ class IntercomWebView extends Component{
             <View style={[{height: height}, this.props.style]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
-                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher )}
+                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash )}
                          javaScriptEnabled={true}
                          onLoadEnd={this.onLoadEnd}
                          onMessage={e => this.dispatch(e.nativeEvent.data)}
@@ -76,12 +78,14 @@ IntercomWebView.propTypes = {
     email: PropTypes.string,
     hideLauncher: PropTypes.bool,
     showLoadingOverlay: PropTypes.bool,
-    defaultHeight: PropTypes.number
+    defaultHeight: PropTypes.number,
+    userHash: PropTypes.string
 };
 
 IntercomWebView.defaultProps = {
     hideLauncher: false,
-    showLoadingOverlay: true
+    showLoadingOverlay: true,
+    userHash: ''
 };
 
 export default IntercomWebView;
