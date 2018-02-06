@@ -25,15 +25,15 @@ class IntercomWebView extends Component{
 				var originalPostMessage = window.postMessage;
 			
 				var patchedPostMessage = function(message, targetOrigin, transfer) { 
-				  originalPostMessage(message, targetOrigin, transfer);
+		    		originalPostMessage(message, targetOrigin, transfer);
 				};
 			
 				patchedPostMessage.toString = function() { 
-				  return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
+		    		return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
 				};
 			
 				window.postMessage = patchedPostMessage;
-			  })();
+	    	})();
 
             window.Intercom('boot', {
                 app_id: '${appId}',
