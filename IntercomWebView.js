@@ -46,7 +46,7 @@ class IntercomWebView extends Component{
             if (${hideLauncher})
                 window.Intercom('showMessages');
             window.Intercom('onHide', function () { window.postMessage && window.postMessage('onHide') })
-                `;
+		`;
     }
 
     onLoadEnd = () => {
