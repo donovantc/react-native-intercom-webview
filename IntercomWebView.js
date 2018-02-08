@@ -21,19 +21,19 @@ class IntercomWebView extends Component{
 
     injectedJS = (appId, name, email, id, hideLauncher, userHash) => {
         return `
-            (function() {
+			(function() {
 				var originalPostMessage = window.postMessage;
-			
+
 				var patchedPostMessage = function(message, targetOrigin, transfer) { 
-		    		originalPostMessage(message, targetOrigin, transfer);
+				originalPostMessage(message, targetOrigin, transfer);
 				};
-			
+
 				patchedPostMessage.toString = function() { 
-		    		return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
+				return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
 				};
-			
+
 				window.postMessage = patchedPostMessage;
-	    	})();
+			})();
 
             window.Intercom('boot', {
                 app_id: '${appId}',
@@ -43,9 +43,11 @@ class IntercomWebView extends Component{
                 hide_default_launcher: ${hideLauncher},
                 user_hash: '${userHash}'
             });
+
             if (${hideLauncher})
                 window.Intercom('showMessages');
-            window.Intercom('onHide', function () { window.postMessage && window.postMessage('onHide') })
+
+			window.Intercom('onHide', function () { window.postMessage && window.postMessage('onHide') })
 		`;
     }
 
