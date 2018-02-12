@@ -21,13 +21,27 @@ class IntercomWebView extends Component{
 
     injectedJS = (appId, name, email, id, hideLauncher, userHash) => {
         return `
+			(function() {
+				var originalPostMessage = window.postMessage;
+			
+				var patchedPostMessage = function(message, targetOrigin, transfer) { 
+				  originalPostMessage(message, targetOrigin, transfer);
+				};
+			
+				patchedPostMessage.toString = function() { 
+				  return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
+				};
+			
+				window.postMessage = patchedPostMessage;
+			  })();
+
             window.Intercom('boot', {
+                ${id == null ? '' : 'user_id: "' + id + '",'},
+                ${userHash == null ? '' : 'user_hash: "' + userHash + '",'}
                 app_id: '${appId}',
                 name: '${name}',
                 email: '${email}',
-                user_id: '${id}',
-                hide_default_launcher: ${hideLauncher},
-                user_hash: '${userHash}'
+                hide_default_launcher: ${hideLauncher}
             });
             if (${hideLauncher})
                 window.Intercom('showMessages');
@@ -74,16 +88,18 @@ IntercomWebView.propTypes = {
     appId: PropTypes.string,
     name: PropTypes.string,
     email: PropTypes.string,
+    id: PropTypes.string || null
     hideLauncher: PropTypes.bool,
     showLoadingOverlay: PropTypes.bool,
     defaultHeight: PropTypes.number,
-    userHash: PropTypes.string
+    userHash: PropTypes.string || null
 };
 
 IntercomWebView.defaultProps = {
     hideLauncher: false,
     showLoadingOverlay: true,
-    userHash: ''
+    id: null,
+    userHash: null
 };
 
 export default IntercomWebView;
