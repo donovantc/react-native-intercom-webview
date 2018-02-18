@@ -88,7 +88,7 @@ IntercomWebView.propTypes = {
     appId: PropTypes.string,
     name: PropTypes.string,
     email: PropTypes.string,
-    id: PropTypes.string || null
+    id: PropTypes.string || null,
     hideLauncher: PropTypes.bool,
     showLoadingOverlay: PropTypes.bool,
     defaultHeight: PropTypes.number,
