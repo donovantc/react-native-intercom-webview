@@ -18,35 +18,29 @@ class IntercomWebView extends Component{
         });
     }
 
+    injectedJS = (appId, name, email, id = '', hideLauncher, userHash = '') => {
+        const config = {
+            user_id: id,
+            user_hash: userHash,
+            app_id: appId,
+            name: name,
+            email: email,
+            hide_default_launcher: hideLauncher
+        }
 
-    injectedJS = (appId, name, email, id, hideLauncher, userHash) => {
+        let strConfig = ''
+        try {
+            strConfig = JSON.stringify(config)
+        } catch(e){
+            console.log('Unable to stringify config', e)
+        }
+          
         return `
-			(function() {
-				var originalPostMessage = window.postMessage;
-			
-				var patchedPostMessage = function(message, targetOrigin, transfer) { 
-				  originalPostMessage(message, targetOrigin, transfer);
-				};
-			
-				patchedPostMessage.toString = function() { 
-				  return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage'); 
-				};
-			
-				window.postMessage = patchedPostMessage;
-			  })();
+            window.Intercom('boot', ${strConfig});
 
-            window.Intercom('boot', {
-                ${id == null ? '' : 'user_id: "' + id + '",'},
-                ${userHash == null ? '' : 'user_hash: "' + userHash + '",'}
-                app_id: '${appId}',
-                name: '${name}',
-                email: '${email}',
-                hide_default_launcher: ${hideLauncher}
-            });
             if (${hideLauncher})
                 window.Intercom('showMessages');
-            window.Intercom('onHide', function () { window.postMessage && window.postMessage('onHide') })
-                `;
+        `;
     }
 
     onLoadEnd = () => {
@@ -56,27 +50,21 @@ class IntercomWebView extends Component{
             this.props.onLoadEnd();
     }
 
-    dispatch = (message) => {
-      if (message === 'onHide') {
-        this.props.onHide && this.props.onHide();
-      }
-    }
-
     render(){
-        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, userHash, ...remainingProps } = this.props;
+        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, userHash, onHide, ...remainingProps } = this.props;
         const { isLoading, windowHeight } = this.state;
 
         let height = defaultHeight || windowHeight;
 
         return(
 
-            <View style={[{height: height}, this.props.style]}>
+            <View style={[{height: height}, this.props.style, {flex: 1, backgroundColor: 'red'}]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
-                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash )}
+                         style={{flex: 1, backgroundColor: 'blue'}}
+                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash, onHide )}
                          javaScriptEnabled={true}
                          onLoadEnd={this.onLoadEnd}
-                         onMessage={e => this.dispatch(e.nativeEvent.data)}
                         {...remainingProps}
                 />
             </View>
