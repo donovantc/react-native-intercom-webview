@@ -36,7 +36,7 @@ class IntercomWebView extends Component{
 			  })();
 
             window.Intercom('boot', {
-                ${id == null ? '' : 'user_id: "' + id + '",'},
+                ${id == null ? '' : 'user_id: "' + id + '",'}
                 ${userHash == null ? '' : 'user_hash: "' + userHash + '",'}
                 app_id: '${appId}',
                 name: '${name}',
