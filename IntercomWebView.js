@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import { View, WebView, Dimensions } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+
 class IntercomWebView extends Component{
+
+    static ON_HIDE_MESSAGE = 'WEBVIEW_CLOSED';
+
     constructor(props){
         super(props);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            windowHeight: Dimensions.get('window').height
         };
         this.onLoadEnd = this.onLoadEnd.bind(this);
-    }
-
-    componentDidMount = () => {
-        this.setState({
-            windowHeight: Dimensions.get('window').height
-        });
     }
 
     injectedJS = (appId, name, email, id = '', hideLauncher, userHash = '') => {
@@ -28,20 +27,23 @@ class IntercomWebView extends Component{
             hide_default_launcher: hideLauncher
         }
 
-        let strConfig = ''
-        try {
-            strConfig = JSON.stringify(config)
-        } catch(e){
-            console.log('Unable to stringify config', e)
-        }
-          
         return `
-            window.Intercom('boot', ${strConfig});
+            // Fix onMessage: https://github.com/facebook/react-native/issues/10865#issuecomment-269847703
+            var originalPostMessage = window.postMessage;
+            var patchedPostMessage = function(message, targetOrigin, transfer) {
+                originalPostMessage(message, targetOrigin, transfer);
+            };
+            patchedPostMessage.toString = function() {
+                return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage');
+            };
+            window.postMessage = patchedPostMessage;
 
-            if (${hideLauncher})
-                window.Intercom('showMessages');
+            window.Intercom('boot', ${JSON.stringify(config)});
+            if (${hideLauncher}) window.Intercom('showMessages');
+            window.Intercom('onHide', () => window.postMessage('${IntercomWebView.ON_HIDE_MESSAGE}'));
         `;
     }
+
 
     onLoadEnd = () => {
         this.setState({isLoading: false});
@@ -51,21 +53,22 @@ class IntercomWebView extends Component{
     }
 
     render(){
-        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, userHash, onHide, ...remainingProps } = this.props;
+        const { appId, name, email, id, hideLauncher, defaultHeight, showLoadingOverlay, userHash, ...remainingProps } = this.props;
         const { isLoading, windowHeight } = this.state;
 
         let height = defaultHeight || windowHeight;
 
         return(
 
-            <View style={[{height: height}, this.props.style, {flex: 1, backgroundColor: 'red'}]}>
+            <View style={[{height: height}, this.props.style, { flex: 1 }]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
-                         style={{flex: 1, backgroundColor: 'blue'}}
-                         injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash, onHide )}
-                         javaScriptEnabled={true}
-                         onLoadEnd={this.onLoadEnd}
-                        {...remainingProps}
+                    style={{ flex: 1 }}
+                    injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash )}
+                    javaScriptEnabled={true}
+                    onLoadEnd={this.onLoadEnd}
+                    bounces={false}
+                    {...remainingProps}
                 />
             </View>
         )
@@ -76,18 +79,19 @@ IntercomWebView.propTypes = {
     appId: PropTypes.string,
     name: PropTypes.string,
     email: PropTypes.string,
-    id: PropTypes.string || null,
+    id: PropTypes.string,
     hideLauncher: PropTypes.bool,
     showLoadingOverlay: PropTypes.bool,
     defaultHeight: PropTypes.number,
-    userHash: PropTypes.string || null
+    userHash: PropTypes.string,
 };
 
 IntercomWebView.defaultProps = {
-    hideLauncher: false,
+    hideLauncher: true,
     showLoadingOverlay: true,
     id: null,
-    userHash: null
+    userHash: null,
+    defaultHeight: 500,
 };
 
 export default IntercomWebView;
