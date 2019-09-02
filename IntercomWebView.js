@@ -58,10 +58,10 @@ class IntercomWebView extends Component{
 
         return(
 
-            <View style={[{height: height}, this.props.style, {flex: 1, backgroundColor: 'red'}]}>
+            <View style={[{height: height}, this.props.style, {flex: 1}]}>
                 <Spinner visible={showLoadingOverlay && isLoading} />
                 <WebView source={require('./IntercomWebView.html')}
-                         style={{flex: 1, backgroundColor: 'blue'}}
+                         style={{flex: 1, backgroundColor: '#fff', overflow: 'hidden'}}
                          injectedJavaScript={this.injectedJS( appId, name, email, id, hideLauncher, userHash, onHide )}
                          javaScriptEnabled={true}
                          onLoadEnd={this.onLoadEnd}
